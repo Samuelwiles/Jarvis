@@ -1,1 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS Advanced HUD</title>
+    <!-- Load MediaPipe and Three.js Libraries -->
+    <script src="https://jsdelivr.net" crossorigin="anonymous"></script>
+    <script src="https://jsdelivr.net" crossorigin="anonymous"></script>
+    <script src="https://cloudflare.com"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #02020a;
+            color: #00e5ff;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+        }
+        #hud-header {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            text-shadow: 0 0 10px #00e5ff;
+        }
+        #webcam {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 240px;
+            height: 180px;
+            transform: scaleX(-1);
+            border: 2px solid #00e5ff;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+            z-index: 5;
+        }
+        #three-container {
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #status-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(2, 2, 10, 0.7);
+            padding: 15px;
+            border-left: 4px solid #00e5ff;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="hud-header">
+        <h1>JARVIS: MARK VII VISION SYSTEM</h1>
+        <div id="voice-state">SYSTEM: INITIALIZING...</div>
+    </div>
+
+    <div id="three-container"></div>
+    <video id="webcam" autoplay playsinline></video>
+
+    <div id="status-panel">
+        <div>OBJECT STATUS: <span id="obj-status" style="color: #ff0055;">LOCKED</span></div>
+        <div style="margin-top: 5px; font-size: 12px; color: #88a;">COMMANDS: "RESIZE" | "ROTATE" | "LOCK"</div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
 
