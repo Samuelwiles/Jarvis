@@ -7,7 +7,6 @@ const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 container.appendChild(renderer.domElement);
 
-// Create a futuristic glowing wireframe cube
 const geometry = new THREE.BoxGeometry(2, 2, 2);
 const material = new THREE.MeshBasicMaterial({
     color: 0x00e5ff,
@@ -18,7 +17,6 @@ const material = new THREE.MeshBasicMaterial({
 const hologramCube = new THREE.Mesh(geometry, material);
 scene.add(hologramCube);
 
-// Add an inner core object
 const coreGeo = new THREE.OctahedronGeometry(0.6);
 const coreMat = new THREE.MeshBasicMaterial({ color: 0xff0055, wireframe: true });
 const coreMesh = new THREE.Mesh(coreGeo, coreMat);
@@ -26,11 +24,9 @@ scene.add(coreMesh);
 
 camera3D.position.z = 5;
 
-// System states
-let systemMode = "lock"; // modes: lock, resize, rotate
+let systemMode = "lock"; 
 let currentScale = 1.0;
 
-// Render loop
 function animate() {
     requestAnimationFrame(animate);
     coreMesh.rotation.x += 0.01;
@@ -62,33 +58,32 @@ if (SpeechEngine) {
 
     recognition.onstart = () => {
         voiceState.innerText = "SYSTEM: ONLINE / LISTENING";
-        jarvisSpeak("All systems online. Ready for your command, Sir.");
+        jarvisSpeak("All systems online, Sir.");
     };
 
     recognition.onresult = (event) => {
         const textResult = event.results[event.results.length - 1].transcript.toLowerCase();
-        console.log("JARVIS Heard: ", textResult);
 
         if (textResult.includes("resize")) {
             systemMode = "resize";
             objStatus.innerText = "RESIZING ACTIVE";
             objStatus.style.color = "#00ff55";
             material.color.setHex(0x00ff55); 
-            jarvisSpeak("Control granted. Adjusting object scale.");
+            jarvisSpeak("Adjusting scale.");
         } 
         else if (textResult.includes("rotate")) {
             systemMode = "rotate";
             objStatus.innerText = "ROTATION ACTIVE";
             objStatus.style.color = "#ffaa00";
             material.color.setHex(0xffaa00); 
-            jarvisSpeak("Rotation matrix unlocked. Move your hand to spin.");
+            jarvisSpeak("Unlocking rotation.");
         } 
         else if (textResult.includes("lock") || textResult.includes("stop")) {
             systemMode = "lock";
             objStatus.innerText = "LOCKED";
             objStatus.style.color = "#00e5ff";
             material.color.setHex(0x00e5ff); 
-            jarvisSpeak("Locking parameters, Sir.");
+            jarvisSpeak("Locked.");
         }
     };
 
@@ -96,7 +91,7 @@ if (SpeechEngine) {
     recognition.start();
 }
 
-// --- 3. ADVANCED VISION AI (MEDIAPIPE) ---
+// --- 3. FAST VISION AI SPEED FIX ---
 const videoElement = document.getElementById('webcam');
 
 function handleHandTracking(results) {
@@ -123,16 +118,16 @@ function handleHandTracking(results) {
     }
 }
 
-// FIXED: Uses direct unpkg links instead of jsdelivr CDN
 const handsAI = new Hands({
     locateFile: (file) => `https://unpkg.com{file}`
 });
 
+// SPEED FIX HACK: Model complexity 0 tells the AI to use the fastest, lightest settings
 handsAI.setOptions({
     maxNumHands: 1,
-    modelComplexity: 1,
-    minDetectionConfidence: 0.7,
-    minTrackingConfidence: 0.7
+    modelComplexity: 0, 
+    minDetectionConfidence: 0.5,
+    minTrackingConfidence: 0.5
 });
 handsAI.onResults(handleHandTracking);
 
