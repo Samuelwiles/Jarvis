@@ -39,9 +39,10 @@ function animate() {
 }
 animate();
 
-// --- 2. JARVIS VOICE CONTROL ---
+// --- 2. FIXED JARVIS VOICE CONTROL ---
 const voiceState = document.getElementById('voice-state');
 const objStatus = document.getElementById('obj-status');
+let isListening = false;
 
 function jarvisSpeak(text) {
     const speech = new SpeechSynthesisUtterance(text);
@@ -57,8 +58,8 @@ if (SpeechEngine) {
     recognition.interimResults = false;
 
     recognition.onstart = () => {
+        isListening = true;
         voiceState.innerText = "SYSTEM: ONLINE / LISTENING";
-        jarvisSpeak("All systems online, Sir.");
     };
 
     recognition.onresult = (event) => {
@@ -87,11 +88,27 @@ if (SpeechEngine) {
         }
     };
 
-    recognition.onend = () => { recognition.start(); };
+    recognition.onerror = (event) => {
+        console.log("Speech error caught safely: ", event.error);
+    };
+
+    // FIXED: Instead of starting instantly, it waits 1 second to stop the reload bug
+    recognition.onend = () => { 
+        isListening = false;
+        voiceState.innerText = "SYSTEM: PAUSED";
+        setTimeout(() => {
+            if (!isListening) {
+                recognition.start();
+            }
+        }, 1000); 
+    };
+
+    // Initial greeting
+    jarvisSpeak("All systems online, Sir.");
     recognition.start();
 }
 
-// --- 3. FAST VISION AI SPEED FIX ---
+// --- 3. VISION AI SYSTEM ---
 const videoElement = document.getElementById('webcam');
 
 function handleHandTracking(results) {
@@ -122,7 +139,6 @@ const handsAI = new Hands({
     locateFile: (file) => `https://unpkg.com{file}`
 });
 
-// SPEED FIX HACK: Model complexity 0 tells the AI to use the fastest, lightest settings
 handsAI.setOptions({
     maxNumHands: 1,
     modelComplexity: 0, 
